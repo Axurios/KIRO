@@ -78,4 +78,3 @@ class dataParser:
             "rolling_window_cost": rolling_window_cost,
             "total_cost": total_cost
         }
-
