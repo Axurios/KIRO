@@ -22,7 +22,7 @@ def find_optimal_permutation(parser):
         if cost < min_cost:
             min_cost = cost
             optimal_sequence = perm
-            print(f"New optimal sequence found: {optimal_sequence} with cost {min_cost}")
+            print(f"New optimal sequence found: {optimal_sequence} with cost {min_cost}") # noqa :
         # i+=1
         # if i>=10000 :
         #     break
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     # Access parsed data
     # print("Shops:", parser.get_shops())
-    # print("Parameters:", parser.get_parameters())
+    print("Parameters:", parser.get_parameters()['two_tone_delta'])
     # print("Vehicles:", parser.get_vehicles())
     # print("Constraints:", parser.get_constraints())
 
@@ -70,7 +70,3 @@ if __name__ == "__main__":
     # Optionally save solution to a file
     print("viable solution ? ", solution.isViable())
     solution.save_to_file("solution.json")
-
-
-def swap(sequence, i, j):
-    sequence[i], sequence[j] = sequence[j], sequence[i]

@@ -1,32 +1,34 @@
 import json
 
+import copy
 
-def computeExitPaint(entry, vehicles):
-    exit = []
-    return exit
 
-# liste_2T = [False, False, False, True, True, False, False, True, True, False]
-# permutation_exemple1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+def swap(sequence, i, j):
+    sequence[i], sequence[j] = sequence[j], sequence[i]
 
-# def swap_paint(permutation, delta = 3):
-#   for j in range(len(permutation)):
-#     i = len(permutation) - j - 1
 
-#     if liste_2T[permutation[i]]:
-#       if i == len(permutation) - 1:
-#         swap(permutation, i, i-1)
+def computeExitPaint(entry, vehicles, delta):
+    permutation = copy.deepcopy(entry)
+    # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
+    # permutation_exemple1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    for j in range(len(permutation)):
+        i = len(permutation) - j - 1
 
-#       elif i == len(permutation) - 2:
-#         swap(permutation, i, i+1)
+        if vehicles[permutation[i]] == "two-tone":
+            if i == len(permutation) - 1:
+                swap(permutation, i, i-1)
 
-#       elif i > len(permutation) - delta:
-#         swap(permutation, i, -1)
-#         swap(permutation, i, i+1)
+            elif i == len(permutation) - 2:
+                swap(permutation, i, i+1)
 
-#       else:
-#         swap(permutation, i, i+2)
-#         swap(permutation, i, i+1)
-#   return permutation
+            elif i > len(permutation) - delta:
+                swap(permutation, i, -1)
+                swap(permutation, i, i+1)
+
+            else:
+                swap(permutation, i, i+2)
+                swap(permutation, i, i+1)
+    return permutation
 
 
 class Solution:
@@ -50,7 +52,7 @@ class Solution:
         if shop_name == "paint":
             self.solution[shop_name] = {
                 "entry": entry_sequence,
-                "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles()) # noqa:
+                "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta']) # noqa:
             }
 
     # is useless :
