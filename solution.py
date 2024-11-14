@@ -2,6 +2,7 @@ import json
 # import parser
 from constraint import compute_exit
 
+
 def compose_permutations(sigma, tau):
     # Initialize the result list for the composition
     composition = [0] * len(sigma)
@@ -78,6 +79,7 @@ class Solution:
             }
         if shop_name == "paint":
             print(entry_sequence)
+            print(self.parser.get_vehicles())
             self.solution[shop_name] = {
                 "entry": entry_sequence,
                 "exit": compute_exit(entry=entry_sequence, vehicles=self.parser.get_vehicles(), delta=self.parser.get_parameters()['two_tone_delta'])

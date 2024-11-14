@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # Access parsed data
     # print("Shops:", parser.get_shops())
     #  print("Parameters:", parser.get_parameters()['two_tone_delta'])
-    print("Vehicles:", parser.get_vehicles())
+    #print("Vehicles:", parser.get_vehicles())
     # print("Constraints:", parser.get_constraints())
 
     # Calculate costs
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     solution = Solution(parser)
     # Add sequences for each shop (using example data from the prompt)
     identity = (np.arange(1, 1+len(parser.get_vehicles()))).tolist()
-    print(identity)
+    # print(identity)
     # print(identity54)
     solution.add_shop_entry("body", identity)
     solution.add_shop_entry("paint", identity)
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     # print(solution.solution)
 
-    print(solution.compute_costs())
+    # print(solution.compute_costs())
 
     # Find optimal permutation
     # optimal_sequence, min_cost = find_optimal_permutation(parser)
