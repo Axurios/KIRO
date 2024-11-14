@@ -71,3 +71,44 @@ class Solution:
         """Save the solution as a JSON file."""
         with open(filename, 'w') as file:
             json.dump(self.solution, file, indent=4)
+
+    def compute_costs(self):
+        """Compute individual costs based on constraints."""
+        batch_cost = 0
+        lot_change_cost = 0
+        rolling_window_cost = 0
+        two_tone_cost = 0
+        resequencing_cost = self.parameters.get('resequencing_cost', 0)
+
+        for constraint in self.constraints:
+            cost = constraint.get("cost", 0)
+            if constraint['type'] == 'batch_size':
+                # Example placeholder calculation for batch size constraint
+                min_vehicles = constraint.get('min_vehicles', 0)
+                max_vehicles = constraint.get('max_vehicles', 0)
+                batch_cost += cost * (max_vehicles - min_vehicles)
+
+            elif constraint['type'] == 'lot_change':
+                # Example placeholder calculation for lot change constraint
+                lot_change_cost += cost  # Directly add cost for demonstration
+
+            elif constraint['type'] == 'rolling_window':
+                # Example placeholder calculation for rolling window constraint
+                max_vehicles = constraint.get('max_vehicles', 0)
+                window_size = constraint.get('window_size', 0)
+                rolling_window_cost += cost * (window_size - max_vehicles)
+
+            elif constraint['type'] == 'two_tone':
+                # Example placeholder calculation for two-tone constraint
+                two_tone_cost += cost
+
+        # Total cost calculation (sum of all individual costs)
+        total_cost = batch_cost + lot_change_cost + rolling_window_cost + two_tone_cost + resequencing_cost # noqa:
+        return {
+            "batch_cost": batch_cost,
+            "lot_change_cost": lot_change_cost,
+            "rolling_window_cost": rolling_window_cost,
+            "two_tone_cost": two_tone_cost,
+            "resequencing_cost": resequencing_cost,
+            "total_cost": total_cost
+        }
