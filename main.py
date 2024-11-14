@@ -26,7 +26,7 @@ def find_optimal_permutation(parser):
             optimal_sequence = perm
             print(f"New optimal sequence found: {optimal_sequence} with cost {min_cost}") # noqa :
         i += 1
-        if i >= 100 :
+        if i >= 1000 :
             break
 
     return optimal_sequence, min_cost
@@ -35,7 +35,7 @@ def find_optimal_permutation(parser):
 if __name__ == "__main__":
     print("ok")
     # Example usage
-    filename = 'Instances/small_1.json'  # Replace with the path to your JSON file # noqa:
+    filename = 'Instances/tiny.json'  # Replace with the path to your JSON file # noqa:
     parser = dataParser(filename)
 
     # Access parsed data
