@@ -1,5 +1,5 @@
 import json
-
+import parser
 import copy
 
 
@@ -32,9 +32,9 @@ def computeExitPaint(entry, vehicles, delta):
 
 
 class Solution:
-    def __init__(self, parser):
+    def __init__(self, called_parser):
         self.solution = {}
-        self.parser = parser
+        self.parser = called_parser
 
     # def add_shop_sequence(self, shop_name, entry_sequence, exit_sequence):
     #     """Add the entry and exit sequence for a given shop."""
@@ -52,7 +52,7 @@ class Solution:
         if shop_name == "paint":
             self.solution[shop_name] = {
                 "entry": entry_sequence,
-                "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta']) # noqa:
+                "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta'])
             }
 
     # is useless :
@@ -121,13 +121,19 @@ class Solution:
                             if i >= constraint['window_size'] and sequences['entry'][i - constraint['window_size']] in constraint['vehicles']:
                                 window_count -= 1
 
-        # Calculate two-tone cost
-        two_tone_delta = self.parser.parameters.get('two_tone_delta', 0)
-        for shop_name, sequences in self.solution.items():
-            if shop_name == 'paint':
-                for i in range(len(sequences['entry'])):
-                    if self.parser.vehicles[sequences['entry'][i]] == 'two-tone':
-                        two_tone_cost += two_tone_delta
+        # Calculate resequencing cost
+        c = self.parser.parameters.get('resequencing_cost', 0)
+        resequencing_delays = 0
+        for s in range(len(self.solution) - 1):
+            shop_s = self.solution[f'shop_{s}']
+            shop_s_plus_1 = self.solution[f'shop_{s + 1}']
+            for v in shop_s['exit']:
+                t_v_minus_1_s = shop_s['exit'].index(v) + 1
+                t_v_minus_1_s_plus_1 = shop_s_plus_1['entry'].index(v) + 1
+                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s - self.parser.shops[f'shop_{s}']['resequencing_lag']
+                if delay > 0:
+                    resequencing_delays += delay
+        resequencing_cost = c * resequencing_delays
 
         # Total cost calculation (sum of all individual costs)
         total_cost = batch_cost + lot_change_cost + rolling_window_cost + two_tone_cost + resequencing_cost # noqa:
