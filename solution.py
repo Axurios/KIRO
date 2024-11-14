@@ -1,60 +1,80 @@
 import json
 # import parser
 # import copy
+import numpy as np
 
 
 def swap(sequence, i, j):
     sequence[i], sequence[j] = sequence[j], sequence[i]
 
 
+def paint_order(L, vehicles, delta):
+    L_entry = L
+    index_entry = [i for i in range(len(L_entry))]
+    index_exit = []
+    L_exit = []
+    two_tone_temp = []
+    two_tone_temp_time = np.array([])
+    two_tone_temp_index = []
+
+    # Convert dictionary items to a list
+    vehicles_items = list(vehicles.items())
+
+    for i in range(len(L_entry)):
+        if len(two_tone_temp_time) > 0:
+            for k in range(len(two_tone_temp_time)):
+                if two_tone_temp_time[0] >= delta-1:
+
+                    L_exit.append(two_tone_temp[0])
+                    index_exit.append(two_tone_temp_index[0])
+                    two_tone_temp = two_tone_temp[1:]
+                    two_tone_temp_time = two_tone_temp_time[1:]
+                    two_tone_temp_index = two_tone_temp_index[1:]
+
+        # Access the i-th element
+        key, value = vehicles_items[i]
+        if value == "two-tone":
+            two_tone_temp.append(L_entry[i])
+            two_tone_temp_time = np.append(two_tone_temp_time, 0)
+            two_tone_temp_index.append(index_entry[i])
+
+        else:
+            L_exit.append(L_entry[i])
+            index_exit.append(index_entry[i])
+            two_tone_temp_time += 1
+
+    L_exit = L_exit+two_tone_temp
+    index_exit = index_exit+two_tone_temp_index
+    return L_entry, L_exit, index_exit
+
+
 def computeExitPaint(entry, vehicles, delta):
-    # print(delta)
-    print(entry)
-    # print(vehicles[entry[i-1]])
+    """
+    Given an entry sequence and vehicles dictionary, computes the exit sequence 
+    with two-tone vehicles shifted backward by delta.
+
+    :param entry: list of vehicle IDs at the entrance
+    :param vehicles: dict mapping vehicle IDs to vehicle types (e.g., 'two-tone')
+    :param delta: int, number of positions to move two-tone vehicles backward
+    :return: list representing the exit sequence
+    """
+    # Initial permutation (copy of entry sequence)
     permutation = entry.copy()
-    for j in reversed(range(len(entry))):
-        print(j)
-        if vehicles[entry[j-1]] == "two-tone":
-            for k in range(delta):
-                if j == len(permutation) - k:
-                    swap(permutation, j, j-1)
-            else:
-                swap(permutation, j, j-2)
-                swap(permutation, j, j-1)
-    print(permutation)
+
+    # Determine the exit sequence
+    two_tone_indices = [i for i, v in enumerate(permutation) if vehicles.get(v) == "two-tone"]
+
+    # Rearrange each two-tone vehicle backward by delta
+    for idx in two_tone_indices:
+        # Determine the maximum possible backward shift for this position
+        shift_amount = min(delta, idx)
+
+        # Shift the two-tone vehicle backward by swapping positions
+        for shift in range(shift_amount):
+            swap(permutation, idx - shift, idx - shift - 1)
+
+    # Return the modified sequence for the paint shop, or unchanged for others
     return permutation
-    # permutation += [0 for i in range(delta)]
-    # for j in range(len(permutation)):
-    #     i = len(permutation) - j - 1
-    #     # print("o", i, vehicles[permutation[i]])
-    #     if vehicles[permutation[i]] == "two_tone":
-    #         swap(permutation, i, i+delta)
-    #         swap(permutation, i, i+1)
-    # for i in range(len(permutation)):
-    #     if permutation[i] == 0:
-    #         permutation.pop(i)
-    # return permutation
-    # permutation = copy.deepcopy(entry)
-    # # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
-    # # permutation_exemple1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    # for j in range(len(permutation)):
-    #     i = len(permutation) - j - 1
-
-    #     if vehicles[permutation[i]] == "two-tone":
-    #         if i == len(permutation) - 1:
-    #             swap(permutation, i, i-1)
-
-    #         elif i == len(permutation) - 2:
-    #             swap(permutation, i, i+1)
-
-    #         elif i > len(permutation) - delta:
-    #             swap(permutation, i, -1)
-    #             swap(permutation, i, i+1)
-
-    #         else:
-    #             swap(permutation, i, i+2)
-    #             swap(permutation, i, i+1)
-    # return permutation
 
 
 class Solution:
@@ -77,9 +97,10 @@ class Solution:
             }
         if shop_name == "paint":
             print("delta", self.parser.get_parameters())
+            Lentry, Lexit, Lindex = paint_order(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta'])
             self.solution[shop_name] = {
                 "entry": entry_sequence,
-                "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta'])
+                "exit": Lexit  #computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta'])
             }
 
     # is useless :
@@ -120,30 +141,16 @@ class Solution:
                 case "rolling_window":
                     rolling_window_cost = self.rollingCost(constraint) # noqa:
 
-        # Calculate resequencing cost
-        resequencing_delays = 0
-        # for shop_name, sequences in self.solution.items():
-        shop_names = list(self.solution.keys())
-        for s in range(len(shop_names) - 1):
-            shop_s = self.solution[shop_names[s]]
-            shop_s_plus_1 = self.solution[shop_names[s + 1]]
-            for v in shop_s['exit']:
-                t_v_minus_1_s = shop_s['exit'].index(v) + 1
-                t_v_minus_1_s_plus_1 = shop_s_plus_1['entry'].index(v) + 1
-                # print("ok" , self.parser.shops[shop_names[s]])
-                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s  - self.parser.shops[shop_names[s]]
-                if delay > 0:
-                    resequencing_delays += delay
-        resequencing_cost = resequencing_delays * c_resequencing
+        
 
         # Total cost calculation (sum of all individual costs)
-        total_cost = batch_cost + lot_change_cost + rolling_window_cost + resequencing_cost # + two_tone_cost # noqa:
+        total_cost = batch_cost + lot_change_cost + rolling_window_cost #+ resequencing_cost # + two_tone_cost # noqa:
         return {
             "batch_cost": batch_cost,
             "lot_change_cost": lot_change_cost,
             "rolling_window_cost": rolling_window_cost,
             # "two_tone_cost": two_tone_cost,
-            "resequencing_cost": resequencing_cost,
+            #"resequencing_cost": resequencing_cost,
             "total_cost": total_cost
         }
 
