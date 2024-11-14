@@ -5,9 +5,9 @@ from itertools import permutations
 
 def calculate_cost_after_permutation(parser, sequence):
     # Create a temporary parser object with the new sequence
-    temp_parser = dataParser(parser.filename)
-    temp_parser.vehicles = {i: temp_parser.vehicles[i] for i in sequence}
-    costs = temp_parser.compute_costs()
+    temp_sol = Solution(parser.filename)
+    temp_sol.parser.vehicles = {i: temp_sol.parser.vehicles[i] for i in sequence}
+    costs = temp_sol.compute_costs()
     return costs['total_cost']
 
 
