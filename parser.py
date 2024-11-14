@@ -77,7 +77,7 @@ class dataParser:
                 two_tone_cost += cost
 
         # Total cost calculation (sum of all individual costs)
-        total_cost = batch_cost + lot_change_cost + rolling_window_cost + two_tone_cost + resequencing_cost
+        total_cost = batch_cost + lot_change_cost + rolling_window_cost + two_tone_cost + resequencing_cost # noqa:
         return {
             "batch_cost": batch_cost,
             "lot_change_cost": lot_change_cost,
