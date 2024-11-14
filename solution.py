@@ -9,18 +9,31 @@ def swap(sequence, i, j):
 
 def computeExitPaint(entry, vehicles, delta):
     # print(delta)
+    print(entry)
+    # print(vehicles[entry[i-1]])
     permutation = entry.copy()
-    permutation += [0 for i in range(delta)]
-    for j in range(len(permutation)):
-        i = len(permutation) - j - 1
-        # print("o", i, vehicles[permutation[i]])
-        if vehicles[permutation[i]] == "two_tone":
-            swap(permutation, i, i+delta)
-            swap(permutation, i, i+1)
-    for i in range(len(permutation)):
-        if permutation[i] == 0:
-            permutation.pop(i)
+    for j in reversed(range(len(entry))):
+        print(j)
+        if vehicles[entry[j-1]] == "two-tone":
+            for k in range(delta):
+                if j == len(permutation) - k:
+                    swap(permutation, j, j-1)
+            else:
+                swap(permutation, j, j-2)
+                swap(permutation, j, j-1)
+    print(permutation)
     return permutation
+    # permutation += [0 for i in range(delta)]
+    # for j in range(len(permutation)):
+    #     i = len(permutation) - j - 1
+    #     # print("o", i, vehicles[permutation[i]])
+    #     if vehicles[permutation[i]] == "two_tone":
+    #         swap(permutation, i, i+delta)
+    #         swap(permutation, i, i+1)
+    # for i in range(len(permutation)):
+    #     if permutation[i] == 0:
+    #         permutation.pop(i)
+    # return permutation
     # permutation = copy.deepcopy(entry)
     # # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
     # # permutation_exemple1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
