@@ -1,61 +1,62 @@
 import json
 # import parser
-# import copy
+from constraint import compute_exit
+
+def compose_permutations(sigma, tau):
+    # Initialize the result list for the composition
+    composition = [0] * len(sigma)
+    for i in range(len(sigma)):
+        # Apply tau first, then apply sigma
+        composition[i] = sigma[tau[i] - 1]  # Convert to 0-based index
+    return composition
+
+
+def inverse_permutation(sigma):
+    # Initialize a list for the inverse permutation
+    inverse = [0] * len(sigma)
+    # For each element in sigma, put the index in the corresponding place in the inverse
+    for i in range(len(sigma)):
+        inverse[sigma[i] - 1] = i + 1  # Convert to 1-based index
+    return inverse
 
 
 def swap(sequence, i, j):
     sequence[i], sequence[j] = sequence[j], sequence[i]
 
 
-def computeExitPaint(entry, vehicles, delta):
-    # print(delta)
-    print(entry)
-    # print(vehicles[entry[i-1]])
-    permutation = entry.copy()
-    for j in reversed(range(len(entry))):
-        print(j)
-        if vehicles[entry[j-1]] == "two-tone":
-            for k in range(delta):
-                if j == len(permutation) - k:
-                    swap(permutation, j, j-1)
-            else:
-                swap(permutation, j, j-2)
-                swap(permutation, j, j-1)
-    print(permutation)
-    return permutation
-    # permutation += [0 for i in range(delta)]
-    # for j in range(len(permutation)):
-    #     i = len(permutation) - j - 1
-    #     # print("o", i, vehicles[permutation[i]])
-    #     if vehicles[permutation[i]] == "two_tone":
-    #         swap(permutation, i, i+delta)
-    #         swap(permutation, i, i+1)
-    # for i in range(len(permutation)):
-    #     if permutation[i] == 0:
-    #         permutation.pop(i)
-    # return permutation
-    # permutation = copy.deepcopy(entry)
-    # # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
-    # # permutation_exemple1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    # for j in range(len(permutation)):
-    #     i = len(permutation) - j - 1
+# def computeExitPaint(entry, vehicles, delta):
+#     # Create a copy of the entry list to avoid modifying it while iterating
+#     result = entry[:]
 
-    #     if vehicles[permutation[i]] == "two-tone":
-    #         if i == len(permutation) - 1:
-    #             swap(permutation, i, i-1)
+#     # Iterate through the entry list from the end to the start (reverse)
+#     for i in range(len(entry) - 1, -1, -1):
+#         vehicle_id = entry[i]
 
-    #         elif i == len(permutation) - 2:
-    #             swap(permutation, i, i+1)
+#         # If the vehicle is 'two-tone', attempt to move it up (increase its position)
+#         if vehicles[vehicle_id] == 'two-tone':
+#             # Calculate the maximum allowed shift (delta - 1)
+#             max_shift = delta - 1
 
-    #         elif i > len(permutation) - delta:
-    #             swap(permutation, i, -1)
-    #             swap(permutation, i, i+1)
+#             # Try to move the vehicle up by max_shift positions
+#             current_pos = i
+#             new_pos = current_pos + max_shift
 
-    #         else:
-    #             swap(permutation, i, i+2)
-    #             swap(permutation, i, i+1)
-    # return permutation
+#             # Ensure that we don't go out of bounds
+#             if new_pos >= len(entry):
+#                 new_pos = len(entry) - 1
 
+#             # Move the vehicle up by swapping it with vehicles ahead of it
+#             while new_pos > current_pos:
+#                 # Check if the vehicle at the new position is not 'two-tone'
+#                 if vehicles[result[new_pos]] != 'two-tone':
+#                     # Swap the two vehicles
+#                     result[current_pos], result[new_pos] = result[new_pos], result[current_pos]
+#                     current_pos = new_pos
+#                 else:
+#                     # If it's a two-tone vehicle, stop and leave the current position unchanged
+#                     break
+
+#     return result
 
 class Solution:
     def __init__(self, called_parser):
@@ -76,10 +77,10 @@ class Solution:
                 "exit": entry_sequence
             }
         if shop_name == "paint":
-            print("delta", self.parser.get_parameters())
+            print(entry_sequence)
             self.solution[shop_name] = {
                 "entry": entry_sequence,
-                "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta'])
+                "exit": compute_exit(entry=entry_sequence, vehicles=self.parser.get_vehicles(), delta=self.parser.get_parameters()['two_tone_delta'])
             }
 
     # is useless :
@@ -131,7 +132,7 @@ class Solution:
                 t_v_minus_1_s = shop_s['exit'].index(v) + 1
                 t_v_minus_1_s_plus_1 = shop_s_plus_1['entry'].index(v) + 1
                 # print("ok" , self.parser.shops[shop_names[s]])
-                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s  - self.parser.shops[shop_names[s]]
+                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s - self.parser.shops[shop_names[s]]
                 if delay > 0:
                     resequencing_delays += delay
         resequencing_cost = resequencing_delays * c_resequencing

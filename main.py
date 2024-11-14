@@ -4,6 +4,7 @@ from itertools import permutations
 import numpy as np
 
 
+
 def calculate_cost_after_permutation(parser, sequence):
     # Create a temporary parser object with the new sequence
     temp_sol = Solution(parser)
@@ -39,8 +40,8 @@ if __name__ == "__main__":
 
     # Access parsed data
     # print("Shops:", parser.get_shops())
-    print("Parameters:", parser.get_parameters()['two_tone_delta'])
-    # print("Vehicles:", parser.get_vehicles())
+    #  print("Parameters:", parser.get_parameters()['two_tone_delta'])
+    print("Vehicles:", parser.get_vehicles())
     # print("Constraints:", parser.get_constraints())
 
     # Calculate costs
@@ -49,17 +50,19 @@ if __name__ == "__main__":
     # print("Lot Change Cost:", costs['lot_change_cost'])
     # print("Rolling Window Cost:", costs['rolling_window_cost'])
     # print("Total Cost:", costs['total_cost'])
-
+    
     # Example usage
     solution = Solution(parser)
     # Add sequences for each shop (using example data from the prompt)
-    identity54 = (np.arange(1, 55)).tolist()
+    identity = (np.arange(1, 1+len(parser.get_vehicles()))).tolist()
+    print(identity)
     # print(identity54)
-    solution.add_shop_entry("body", identity54)
-    solution.add_shop_entry("paint", identity54)
-    solution.add_shop_entry("assembly", identity54)
+    solution.add_shop_entry("body", identity)
+    solution.add_shop_entry("paint", identity)
+    solution.add_shop_entry("assembly", identity)
 
     # print(solution.solution)
+
     print(solution.compute_costs())
 
     # Find optimal permutation
