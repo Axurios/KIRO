@@ -1,0 +1,6 @@
+[flake8]
+max-line-length = 115
+extend-ignore =
+    # See https://github.com/PyCQA/pycodestyle/issues/373
+    E203, E501, E266
+    # E501 is line length, E266 is number of "too many leading '#' for block comment"
