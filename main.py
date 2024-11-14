@@ -52,9 +52,9 @@ if __name__ == "__main__":
     # Example usage
     solution = Solution(parser)
     # Add sequences for each shop (using example data from the prompt)
-    # solution.add_shop_entry("body", [1, 2, 3, 4, 5])
+    solution.add_shop_entry("body", [1, 2, 3, 4, 5])
     solution.add_shop_entry("paint", [1, 2, 3, 4, 5])
-    # solution.add_shop_entry("assembly", [1, 2, 4, 3, 5])
+    solution.add_shop_entry("assembly", [1, 2, 4, 3, 5])
 
     print(solution.compute_costs())
 

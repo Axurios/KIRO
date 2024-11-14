@@ -1,5 +1,5 @@
 import json
-import parser
+# import parser
 import copy
 
 
@@ -85,24 +85,13 @@ class Solution:
         for constraint in self.parser.constraints:
             match constraint['type']:
                 case "batch_size":
-                    batch_cost = self.batchCost(self, constraint, batch_cost)
+                    batch_cost = self.batchCost(constraint)
 
                 case "lot_change":
-                    lot_change_cost = self.lotChangeCost(self, constraint, lot_change_cost) # noqa:
+                    lot_change_cost = self.lotChangeCost(constraint) # noqa:
 
                 case "rolling_window":
-                    # rolling_window_cost = self.rollingCost(self, constraint, rolling_window_cost) # noqa:
-                    for shop_name, sequences in self.solution.items():
-                        if shop_name == constraint['shop']:
-                            window_count = 0
-                            for i in range(len(sequences['entry'])):
-                                if sequences['entry'][i] in constraint['vehicles']:
-                                    window_count += 1
-                                if window_count > constraint['max_vehicles']:
-                                    rolling_window_cost += constraint['cost']
-                                    window_count = 0
-                                if i >= constraint['window_size'] and sequences['entry'][i - constraint['window_size']] in constraint['vehicles']:
-                                    window_count -= 1
+                    rolling_window_cost = self.rollingCost(constraint) # noqa:
 
         # Calculate resequencing cost
         c = self.parser.parameters.get('resequencing_cost', 0)
@@ -129,7 +118,8 @@ class Solution:
             "total_cost": total_cost
         }
 
-    def batchCost(self, constraint, batch_cost):
+    def batchCost(self, constraint):
+        batch_cost = 0
         for shop_name, sequences in self.solution.items():
             if shop_name == constraint['shop']:
                 batch_count = 0
@@ -141,7 +131,8 @@ class Solution:
                             batch_count = 0
         return batch_cost
 
-    def lotChangeCost(self, constraint, lot_change_cost):
+    def lotChangeCost(self, constraint):
+        lot_change_cost = 0
         for shop_name, sequences in self.solution.items():
             if shop_name == constraint['shop']:
                 current_partition = None
@@ -154,7 +145,8 @@ class Solution:
                                 break
         return lot_change_cost
 
-    def rollingCost(self, constraint, rolling_window_cost):
+    def rollingCost(self, constraint):
+        rolling_window_cost = 0
         for shop_name, sequences in self.solution.items():
             if shop_name == constraint['shop']:
                 window_count = 0
