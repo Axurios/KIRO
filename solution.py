@@ -1,6 +1,6 @@
 import json
 # import parser
-import copy
+# import copy
 
 
 def swap(sequence, i, j):
@@ -8,27 +8,40 @@ def swap(sequence, i, j):
 
 
 def computeExitPaint(entry, vehicles, delta):
-    permutation = copy.deepcopy(entry)
-    # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
-    # permutation_exemple1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    # print(delta)
+    permutation = entry.copy()
+    permutation += [0 for i in range(delta)]
     for j in range(len(permutation)):
         i = len(permutation) - j - 1
-
-        if vehicles[permutation[i]] == "two-tone":
-            if i == len(permutation) - 1:
-                swap(permutation, i, i-1)
-
-            elif i == len(permutation) - 2:
-                swap(permutation, i, i+1)
-
-            elif i > len(permutation) - delta:
-                swap(permutation, i, -1)
-                swap(permutation, i, i+1)
-
-            else:
-                swap(permutation, i, i+2)
-                swap(permutation, i, i+1)
+        # print("o", i, vehicles[permutation[i]])
+        if vehicles[permutation[i]] == "two_tone":
+            swap(permutation, i, i+delta)
+            swap(permutation, i, i+1)
+    for i in range(len(permutation)):
+        if permutation[i] == 0:
+            permutation.pop(i)
     return permutation
+    # permutation = copy.deepcopy(entry)
+    # # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
+    # # permutation_exemple1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    # for j in range(len(permutation)):
+    #     i = len(permutation) - j - 1
+
+    #     if vehicles[permutation[i]] == "two-tone":
+    #         if i == len(permutation) - 1:
+    #             swap(permutation, i, i-1)
+
+    #         elif i == len(permutation) - 2:
+    #             swap(permutation, i, i+1)
+
+    #         elif i > len(permutation) - delta:
+    #             swap(permutation, i, -1)
+    #             swap(permutation, i, i+1)
+
+    #         else:
+    #             swap(permutation, i, i+2)
+    #             swap(permutation, i, i+1)
+    # return permutation
 
 
 class Solution:
@@ -50,6 +63,7 @@ class Solution:
                 "exit": entry_sequence
             }
         if shop_name == "paint":
+            print("delta", self.parser.get_parameters())
             self.solution[shop_name] = {
                 "entry": entry_sequence,
                 "exit": computeExitPaint(entry_sequence, self.parser.get_vehicles(), self.parser.get_parameters()['two_tone_delta'])

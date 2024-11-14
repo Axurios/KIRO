@@ -63,8 +63,8 @@ if __name__ == "__main__":
     print(solution.compute_costs())
 
     # Find optimal permutation
-    #optimal_sequence, min_cost = find_optimal_permutation(parser)
-    #print("Optimal Sequence:", optimal_sequence)
+    # optimal_sequence, min_cost = find_optimal_permutation(parser)
+    # print("Optimal Sequence:", optimal_sequence)
     # print("Minimum Cost:", min_cost)
 
     # Print solution as JSON
