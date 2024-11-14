@@ -51,6 +51,8 @@ class dataParser:
         batch_cost = 0
         lot_change_cost = 0
         rolling_window_cost = 0
+        two_tone_cost = 0
+        resequencing_cost = self.parameters.get('resequencing_cost', 0)
 
         for constraint in self.constraints:
             cost = constraint.get("cost", 0)
@@ -70,11 +72,17 @@ class dataParser:
                 window_size = constraint.get('window_size', 0)
                 rolling_window_cost += cost * (window_size - max_vehicles)
 
+            elif constraint['type'] == 'two_tone':
+                # Example placeholder calculation for two-tone constraint
+                two_tone_cost += cost
+
         # Total cost calculation (sum of all individual costs)
-        total_cost = batch_cost + lot_change_cost + rolling_window_cost
+        total_cost = batch_cost + lot_change_cost + rolling_window_cost + two_tone_cost + resequencing_cost
         return {
             "batch_cost": batch_cost,
             "lot_change_cost": lot_change_cost,
             "rolling_window_cost": rolling_window_cost,
+            "two_tone_cost": two_tone_cost,
+            "resequencing_cost": resequencing_cost,
             "total_cost": total_cost
         }
