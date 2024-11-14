@@ -14,12 +14,10 @@ def computeExitPaint(entry, vehicles, delta):
     for j in range(len(permutation)):
         i = len(permutation) - j - 1
         # print("o", i, vehicles[permutation[i]])
-        if vehicles[permutation[i]] == "two_tone":
+        if permutation[i] != 0 and vehicles[permutation[i]] == "two_tone":
             swap(permutation, i, i+delta)
             swap(permutation, i, i+1)
-    for i in range(len(permutation)):
-        if permutation[i] == 0:
-            permutation.pop(i)
+    permutation = [x for x in permutation if x != 0]
     return permutation
     # permutation = copy.deepcopy(entry)
     # # liste_2T = [False, False, False, True, True, False, False, True, True, False] # noqa:
