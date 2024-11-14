@@ -82,25 +82,50 @@ class Solution:
 
         for constraint in self.constraints:
             cost = constraint.get("cost", 0)
+
             if constraint['type'] == 'batch_size':
-                # Example placeholder calculation for batch size constraint
-                min_vehicles = constraint.get('min_vehicles', 0)
-                max_vehicles = constraint.get('max_vehicles', 0)
-                batch_cost += cost * (max_vehicles - min_vehicles)
+                for shop_name, sequences in self.solution.items():
+                    if shop_name == constraint['shop']:
+                        batch_count = 0
+                        for vehicle in sequences['entry']:
+                            if vehicle in constraint['vehicles']:
+                                batch_count += 1
+                            if batch_count > constraint['max_vehicles']:
+                                batch_cost += constraint['cost']
+                                batch_count = 0
 
             elif constraint['type'] == 'lot_change':
-                # Example placeholder calculation for lot change constraint
-                lot_change_cost += cost  # Directly add cost for demonstration
+                for shop_name, sequences in self.solution.items():
+                    if shop_name == constraint['shop']:
+                        current_partition = None
+                        for vehicle in sequences['entry']:
+                            for partition in constraint['partition']:
+                                if vehicle in partition:
+                                    if current_partition is not None and current_partition != partition:
+                                        lot_change_cost += constraint['cost']
+                                    current_partition = partition
+                                    break
 
             elif constraint['type'] == 'rolling_window':
-                # Example placeholder calculation for rolling window constraint
-                max_vehicles = constraint.get('max_vehicles', 0)
-                window_size = constraint.get('window_size', 0)
-                rolling_window_cost += cost * (window_size - max_vehicles)
+                for shop_name, sequences in self.solution.items():
+                    if shop_name == constraint['shop']:
+                        window_count = 0
+                        for i in range(len(sequences['entry'])):
+                            if sequences['entry'][i] in constraint['vehicles']:
+                                window_count += 1
+                            if window_count > constraint['max_vehicles']:
+                                rolling_window_cost += constraint['cost']
+                                window_count = 0
+                            if i >= constraint['window_size'] and sequences['entry'][i - constraint['window_size']] in constraint['vehicles']:
+                                window_count -= 1
 
-            elif constraint['type'] == 'two_tone':
-                # Example placeholder calculation for two-tone constraint
-                two_tone_cost += cost
+        # Calculate two-tone cost
+        two_tone_delta = self.parser.parameters.get('two_tone_delta', 0)
+        for shop_name, sequences in self.solution.items():
+            if shop_name == 'paint':
+                for i in range(len(sequences['entry'])):
+                    if self.parser.vehicles[sequences['entry'][i]] == 'two-tone':
+                        two_tone_cost += two_tone_delta
 
         # Total cost calculation (sum of all individual costs)
         total_cost = batch_cost + lot_change_cost + rolling_window_cost + two_tone_cost + resequencing_cost # noqa:
