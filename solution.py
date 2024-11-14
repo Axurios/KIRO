@@ -80,7 +80,7 @@ class Solution:
         lot_change_cost = 0
         rolling_window_cost = 0
         # two_tone_cost = 0
-        resequencing_cost = self.parser.get_parameters()['resequencing_cost']
+        c_resequencing = self.parser.get_parameters()['resequencing_cost']
 
         for constraint in self.parser.constraints:
             match constraint['type']:
@@ -94,7 +94,6 @@ class Solution:
                     rolling_window_cost = self.rollingCost(constraint) # noqa:
 
         # Calculate resequencing cost
-        c_resequencing = self.parser.parameters.get('resequencing_cost', 0)
         resequencing_delays = 0
         shop_names = list(self.solution.keys())
         for s in range(len(shop_names) - 1):
