@@ -6,7 +6,7 @@ from itertools import permutations
 def calculate_cost_after_permutation(parser, sequence):
     # Create a temporary parser object with the new sequence
     temp_sol = Solution(parser.filename)
-    temp_sol.parser.vehicles = {i: temp_sol.parser.vehicles[i] for i in sequence}
+    # parser.vehicles = {i: temp_sol.parser.vehicles[i] for i in sequence}
     costs = temp_sol.compute_costs()
     return costs['total_cost']
 
@@ -52,14 +52,16 @@ if __name__ == "__main__":
     # Example usage
     solution = Solution(parser=parser)
     # Add sequences for each shop (using example data from the prompt)
-    solution.add_shop_entry("body", [1, 2, 3, 4, 5])
+    # solution.add_shop_entry("body", [1, 2, 3, 4, 5])
     solution.add_shop_entry("paint", [1, 2, 3, 4, 5])
-    solution.add_shop_entry("assembly", [1, 2, 4, 3, 5])
+    # solution.add_shop_entry("assembly", [1, 2, 4, 3, 5])
+
+    print(solution.compute_costs())
 
     # Find optimal permutation
-    optimal_sequence, min_cost = find_optimal_permutation(parser)
-    print("Optimal Sequence:", optimal_sequence)
-    print("Minimum Cost:", min_cost)
+    # optimal_sequence, min_cost = find_optimal_permutation(parser)
+    # print("Optimal Sequence:", optimal_sequence)
+    # print("Minimum Cost:", min_cost)
 
     # Print solution as JSON
     # print("Solution JSON:")
