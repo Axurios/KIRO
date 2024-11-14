@@ -16,17 +16,17 @@ def find_optimal_permutation(parser):
     vehicles = list(parser.get_vehicles().keys())
     min_cost = float('inf')
     optimal_sequence = None
-    # i = 0
+    i = 0
     for perm in permutations(vehicles):
-        # print("Attempt n°", i)
+        print("Attempt n°", i)
         cost = calculate_cost_after_permutation(parser, perm)
         if cost < min_cost:
             min_cost = cost
             optimal_sequence = perm
             print(f"New optimal sequence found: {optimal_sequence} with cost {min_cost}") # noqa :
-        # i+=1
-        # if i>=10000 :
-        #     break
+        i += 1
+        if i >= 100 :
+            break
 
     return optimal_sequence, min_cost
 
@@ -34,7 +34,7 @@ def find_optimal_permutation(parser):
 if __name__ == "__main__":
     print("ok")
     # Example usage
-    filename = 'Instances/small_1.json'  # Replace with the path to your JSON file # noqa:
+    filename = 'C:/Users/Etienne/Documents/Ponts/Cours/Kiro/workspace perso/Instances/small_1.json'  # Replace with the path to your JSON file # noqa:
     parser = dataParser(filename)
 
     # Access parsed data
@@ -63,9 +63,9 @@ if __name__ == "__main__":
     print(solution.compute_costs())
 
     # Find optimal permutation
-    # optimal_sequence, min_cost = find_optimal_permutation(parser)
-    # print("Optimal Sequence:", optimal_sequence)
-    # print("Minimum Cost:", min_cost)
+    optimal_sequence, min_cost = find_optimal_permutation(parser)
+    print("Optimal Sequence:", optimal_sequence)
+    print("Minimum Cost:", min_cost)
 
     # Print solution as JSON
     # print("Solution JSON:")

@@ -80,7 +80,7 @@ class Solution:
         lot_change_cost = 0
         rolling_window_cost = 0
         # two_tone_cost = 0
-        resequencing_cost = self.parser.get_parameters()['resequencing_cost']
+        c_resequencing = self.parser.get_parameters()['resequencing_cost']
 
         for constraint in self.parser.constraints:
             match constraint['type']:
@@ -94,18 +94,18 @@ class Solution:
                     rolling_window_cost = self.rollingCost(constraint) # noqa:
 
         # Calculate resequencing cost
-        c = self.parser.parameters.get('resequencing_cost', 0)
         resequencing_delays = 0
-        for s in range(len(self.solution) - 1):
-            shop_s = self.solution[f'shop_{s}']
-            shop_s_plus_1 = self.solution[f'shop_{s + 1}']
+        shop_names = list(self.solution.keys())
+        for s in range(len(shop_names) - 1):
+            shop_s = self.solution[shop_names[s]]
+            shop_s_plus_1 = self.solution[shop_names[s + 1]]
             for v in shop_s['exit']:
                 t_v_minus_1_s = shop_s['exit'].index(v) + 1
                 t_v_minus_1_s_plus_1 = shop_s_plus_1['entry'].index(v) + 1
-                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s - self.parser.shops[f'shop_{s}']['resequencing_lag']
+                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s - self.parser.shops[shop_names[s]]['resequencing_lag']
                 if delay > 0:
                     resequencing_delays += delay
-        resequencing_cost = c * resequencing_delays
+        resequencing_cost = resequencing_delays * c_resequencing
 
         # Total cost calculation (sum of all individual costs)
         total_cost = batch_cost + lot_change_cost + rolling_window_cost + resequencing_cost # + two_tone_cost # noqa:
