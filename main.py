@@ -1,6 +1,7 @@
 from parser import dataParser
 from solution import Solution
 from itertools import permutations
+import numpy as np
 
 
 def calculate_cost_after_permutation(parser, sequence):
@@ -52,10 +53,13 @@ if __name__ == "__main__":
     # Example usage
     solution = Solution(parser)
     # Add sequences for each shop (using example data from the prompt)
-    solution.add_shop_entry("body", [1, 2, 3, 4, 5])
-    solution.add_shop_entry("paint", [1, 2, 3, 4, 5])
-    solution.add_shop_entry("assembly", [1, 2, 4, 3, 5])
+    identity54 = (np.arange(1, 55)).tolist()
+    # print(identity54)
+    solution.add_shop_entry("body", identity54)
+    solution.add_shop_entry("paint", identity54)
+    solution.add_shop_entry("assembly", identity54)
 
+    print(solution.solution)
     print(solution.compute_costs())
 
     # Find optimal permutation
@@ -70,5 +74,5 @@ if __name__ == "__main__":
     # print(solution.to_json())
 
     # Optionally save solution to a file
-    print("viable solution ? ", solution.isViable())
+    # print("viable solution ? ", solution.isViable())
     solution.save_to_file("solution.json")
