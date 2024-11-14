@@ -34,7 +34,7 @@ def find_optimal_permutation(parser):
 if __name__ == "__main__":
     print("ok")
     # Example usage
-    filename = 'C:/Users/Etienne/Documents/Ponts/Cours/Kiro/workspace perso/Instances/small_1.json'  # Replace with the path to your JSON file # noqa:
+    filename = 'Instances/small_1.json'  # Replace with the path to your JSON file # noqa:
     parser = dataParser(filename)
 
     # Access parsed data
@@ -59,13 +59,13 @@ if __name__ == "__main__":
     solution.add_shop_entry("paint", identity54)
     solution.add_shop_entry("assembly", identity54)
 
-    print(solution.solution)
+    # print(solution.solution)
     print(solution.compute_costs())
 
     # Find optimal permutation
-    optimal_sequence, min_cost = find_optimal_permutation(parser)
-    print("Optimal Sequence:", optimal_sequence)
-    print("Minimum Cost:", min_cost)
+    #optimal_sequence, min_cost = find_optimal_permutation(parser)
+    #print("Optimal Sequence:", optimal_sequence)
+    # print("Minimum Cost:", min_cost)
 
     # Print solution as JSON
     # print("Solution JSON:")

@@ -95,6 +95,7 @@ class Solution:
 
         # Calculate resequencing cost
         resequencing_delays = 0
+        # for shop_name, sequences in self.solution.items():
         shop_names = list(self.solution.keys())
         for s in range(len(shop_names) - 1):
             shop_s = self.solution[shop_names[s]]
@@ -102,7 +103,8 @@ class Solution:
             for v in shop_s['exit']:
                 t_v_minus_1_s = shop_s['exit'].index(v) + 1
                 t_v_minus_1_s_plus_1 = shop_s_plus_1['entry'].index(v) + 1
-                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s - self.parser.shops[shop_names[s]]['resequencing_lag']
+                # print("ok" , self.parser.shops[shop_names[s]])
+                delay = t_v_minus_1_s_plus_1 - t_v_minus_1_s  - self.parser.shops[shop_names[s]]
                 if delay > 0:
                     resequencing_delays += delay
         resequencing_cost = resequencing_delays * c_resequencing
