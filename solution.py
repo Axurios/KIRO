@@ -80,9 +80,9 @@ class Solution:
         lot_change_cost = 0
         rolling_window_cost = 0
         two_tone_cost = 0
-        resequencing_cost = self.parameters.get('resequencing_cost', 0)
+        resequencing_cost = self.parser.parameters.get('resequencing_cost', 0)
 
-        for constraint in self.constraints:
+        for constraint in self.parser.constraints:
             cost = constraint.get("cost", 0)
 
             if constraint['type'] == 'batch_size':
